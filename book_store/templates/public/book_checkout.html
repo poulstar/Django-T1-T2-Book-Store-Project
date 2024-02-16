@@ -1,0 +1,104 @@
+{% load static %}
+{% load module_tags %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>فاکتور نهایی</title>
+    <link type="text/css" href="{% static "public/css/cart_style.css" %}" rel="stylesheet" />
+	<link rel="stylesheet" href="{% static "public/css/bootstrap.css" %}">
+</head>
+<body>
+	
+    <div>
+        <a href="{% url "book_cart" %}">بازگشت به سبد خرید</a>
+		<h1>فاکتور</h1>
+		<p>قبل از پرداخت محصولات خود را بررسی کنید.</p>
+		<form action="{% url "book_checkout" %}" method="post">
+			{% csrf_token %}
+			<div class="address">
+				{{form|crispy}}
+			</div>
+			<table class="items">
+				<thead>
+				<!-- start table head -->
+				<tr>
+					<th>اطلاعات کتاب</th>
+					<th>قیمت</th>
+					<th>تعداد</th>
+					<th>مجموع</th>
+				</tr>
+				<!-- end table head -->
+				</thead>
+				<tbody>
+				<!-- start table body -->
+				{% for book in books %}
+				<tr>
+					<!-- start item one -->
+					<td>
+						<div class="item">
+							<img src="{{book.cover.url}}" />
+						</div>
+						<p>{{book.title}}</p>
+						<p>{{book.author}}</p>
+						<p class="description">{{book.description|truncatewords:10}}</p>
+					</td>
+					<td>
+						{% if book.discount %}
+						{{book.price|mines_two_number:book.discount.price}} تومان </div>
+						{% else %}
+						{{book.price}} تومان 
+						{% endif %}
+					</td>
+					<td>
+						<div class="row-inp">
+							<b>{{book.count}}</b>
+						</div>
+					</td>
+					<td class="itemTotal">
+						{% if book.discount %}
+						{{book.price|mines_two_number:book.discount.price|multiply_two_number:book.count}} تومان </div>
+						{% else %}
+						{{book.price|multiply_two_number:book.count}} تومان 
+						{% endif %}
+					</td>
+					<!-- end item one -->
+				</tr>
+				{% endfor %}
+				<!-- end table body -->
+					
+			</tbody>
+				
+			</table>
+			<div class="cost margin-left">
+				<h2>پیش فاکتور</h2>
+
+				<table class="pricing">
+					<tbody>
+					<tr>
+						<td>قیمت کل</td>
+						<td class="subtotal">{{total_price}}</td>
+					</tr>
+					<tr>
+						<td>مالیات</td>
+						<td class="tax">ندارد</td>
+					</tr>
+					<tr>
+						<td>هزینه ارسال</td>
+						<td class="shipping">ندارد</td>
+					</tr>
+					<tr>
+						<td><strong>مجموع:</strong></td>
+						<td class="orderTotal">{{total_price}}</td>
+					</tr>
+					</tbody>
+				</table>
+				<button class="cta" type="submit">پرداخت</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

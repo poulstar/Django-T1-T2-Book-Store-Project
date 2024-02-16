@@ -1,0 +1,100 @@
+{% load static %}
+{% load module_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>سبد خرید</title>
+    <link type="text/css" href="{% static "public/css/cart_style.css" %}" rel="stylesheet" />
+</head>
+<body>
+	
+    <div>
+        <a href="{% url "book_home" %}">بازگشت به صفحه اصلی</a>
+		<h1>سبد خرید</h1>
+		<p>تعداد محصولات را اضافه و کم کنید و سبد خود را ویرایش کنید.</p>
+		<table class="items">
+			<thead>
+			<!-- start table head -->
+			<tr>
+				<th>اطلاعات کتاب</th>
+				<th>قیمت</th>
+				<th>تعداد</th>
+				<th>مجموع</th>
+			</tr>
+			<!-- end table head -->
+			</thead>
+			<tbody>
+			<!-- start table body -->
+			{% for book in books %}
+			<tr>
+				<!-- start item one -->
+				<td>
+					<div class="item">
+						<img src="{{book.cover.url}}" />
+					</div>
+					<p>{{book.title}}</p>
+					<p>{{book.author}}</p>
+					<p class="description">{{book.description|truncatewords:10}}</p>
+				</td>
+				<td>
+					{% if book.discount %}
+                    {{book.price|mines_two_number:book.discount.price}} تومان </div>
+                    {% else %}
+                    {{book.price}} تومان 
+                    {% endif %}
+				</td>
+				<td>
+                    <div class="row-inp">
+                        <a href="{% url "session" book.id 'plus' %}">+</a>
+                        <b>{{book.count}}</b>
+                        <a href="{% url "session" book.id 'mines' %}">-</a>
+                    </div>
+					
+					<a href="{% url "session" book.id 'delete' %}" class="remove">حذف</a>
+				</td>
+				<td class="itemTotal">
+					{% if book.discount %}
+                    {{book.price|mines_two_number:book.discount.price|multiply_two_number:book.count}} تومان </div>
+                    {% else %}
+                    {{book.price|multiply_two_number:book.count}} تومان 
+                    {% endif %}
+				</td>
+				<!-- end item one -->
+			</tr>
+			{% endfor %}
+			<!-- end table body -->
+			</tbody>
+		</table>
+
+		<!-- start checkout list -->
+		<div class="cost margin-left">
+			<h2>پیش فاکتور</h2>
+
+			<table class="pricing">
+				<tbody>
+				<tr>
+					<td>قیمت کل</td>
+					<td class="subtotal">{{total_price}}</td>
+				</tr>
+				<tr>
+					<td>مالیات</td>
+					<td class="tax">ندارد</td>
+				</tr>
+				<tr>
+					<td>هزینه ارسال</td>
+					<td class="shipping">ندارد</td>
+				</tr>
+				<tr>
+					<td><strong>مجموع:</strong></td>
+					<td class="orderTotal">{{total_price}}</td>
+				</tr>
+				</tbody>
+			</table>
+			<a class="cta" href="{% url "book_checkout" %}">خرید</a>
+		</div><!-- end checkout list -->
+	</div>
+</body><!-- This template has been downloaded from Webrubik.com -->
+</html>

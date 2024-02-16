@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static "dashboard/assets/vendors/mdi/css/materialdesignicons.min.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/assets/vendors/css/vendor.bundle.base.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/assets/vendors/jvectormap/jquery-jvectormap.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/assets/vendors/flag-icon-css/css/flag-icon.min.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/assets/vendors/owl-carousel-2/owl.carousel.min.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/assets/vendors/owl-carousel-2/owl.theme.default.min.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/assets/css/style.css" %}">
+    <link rel="shortcut icon" href="{% static "public/image/loader-img.gif" %}" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+          <a class="sidebar-brand brand-logo"><img src="{% static "dashboard/assets/images/logo.svg" %}" alt="logo" /></a>
+          <a class="sidebar-brand brand-logo-mini"><img src="{% static "dashboard/assets/images/logo-mini.svg" %}" alt="logo" /></a>
+        </div>
+        <ul class="nav">
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url "dashboard_home" %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-speedometer"></i>
+              </span>
+              <span class="menu-title">داشبورد</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <span class="menu-icon">
+                <i class="mdi mdi-blogger"></i>
+              </span>
+              <span class="menu-title">بلاگ</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div 
+            {% if current_url == 'dashboard_blog' or current_url == 'dashboard_blog_add' or current_url == 'dashboard_blog_update' %}
+            class="collapse show"
+            {% else %}
+            class="collapse"
+            {% endif %}
+            id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url "dashboard_blog" %}">لیست مقاله ها</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url "dashboard_blog_add" %}">افزودن مقاله</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url "dashboard_comment" %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-comment-multiple-outline"></i>
+              </span>
+              <span class="menu-title">نظر ها</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url "dashboard_favorite" %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-heart"></i>
+              </span>
+              <span class="menu-title">علاقه مندی ها</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url "dashboard_order" %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-account-card-details"></i>
+              </span>
+              <span class="menu-title">فاکتور ها</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url "dashboard_transaction" %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-account-check"></i>
+              </span>
+              <span class="menu-title">تراکنش ها</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar p-0 fixed-top d-flex flex-row">
+          <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+            <a class="navbar-brand brand-logo-mini" href="index.html"><img src="{% static "dashboard/assets/images/logo-mini.svg" %}" alt="logo" /></a>
+          </div>
+          <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+              <span class="mdi mdi-menu"></span>
+            </button>
+            <ul class="navbar-nav w-100">
+              <li class="nav-item w-100"></li>
+            </ul>
+            <ul class="navbar-nav navbar-nav-right">
+              <li class="nav-item dropdown">
+                <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
+                  <div class="navbar-profile">
+                    <img class="img-xs rounded-circle" {% if user.profile_picture %}src="{{user.profile_picture.url}}"{% endif %}  alt="{{user.username}}">
+                    <p class="mb-0 d-none d-sm-block navbar-profile-name">{{user.username}}</p>
+                    <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+                  </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
+                  <a class="dropdown-item preview-item" href="{% url "book_home" %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-home text-success"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">صفحه اصلی</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item preview-item" href="{% url "dashboard_update_profile" %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-settings text-info"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">ویرایش پروفایل</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item preview-item" href="{% url "password_change" %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-lock text-warning"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">تغییر رمز عبور</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <form action="{% url "logout" %}" method="post">
+                    {% csrf_token %}
+                      <button class="dropdown-item preview-item" type="submit">
+                        <div class="preview-thumbnail">
+                          <div class="preview-icon bg-dark rounded-circle">
+                            <i class="mdi mdi-logout text-danger"></i>
+                          </div>
+                        </div>
+                        <div class="preview-item-content">
+                          <p class="preview-subject mb-1">خروج</p>
+                        </div>
+                      </button>
+                  </form>
+                </div>
+              </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+              <span class="mdi mdi-format-line-spacing"></span>
+            </button>
+          </div>
+        </nav>
+        
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{message.tags}}" style="text-align:right;">
+                  {{message}}
+                </div>
+              {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock content %}
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <script src="{% static "dashboard/assets/vendors/js/vendor.bundle.base.js" %}"></script>
+    <script src="{% static "dashboard/assets/vendors/chart.js/Chart.min.js" %}"></script>
+    <script src="{% static "dashboard/assets/vendors/progressbar.js/progressbar.min.js" %}"></script>
+    <script src="{% static "dashboard/assets/vendors/jvectormap/jquery-jvectormap.min.js" %}"></script>
+    <script src="{% static "dashboard/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js" %}"></script>
+    <script src="{% static "dashboard/assets/vendors/owl-carousel-2/owl.carousel.min.js" %}"></script>
+    <script src="{% static "dashboard/assets/js/off-canvas.js" %}"></script>
+    <script src="{% static "dashboard/assets/js/hoverable-collapse.js" %}"></script>
+    <script src="{% static "dashboard/assets/js/misc.js" %}"></script>
+    <script src="{% static "dashboard/assets/js/settings.js" %}"></script>
+    <script src="{% static "dashboard/assets/js/todolist.js" %}"></script>
+    <script src="{% static "dashboard/assets/js/dashboard.js" %}"></script>
+  </body>
+</html>

@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="rtl" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="shortcut icon" href="{% static "public/image/loader-img.gif" %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="{% static "public/css/bootstrap.css" %}">
+    <link rel="stylesheet" href="{% static "public/css/all.css" %}">
+    <link rel="stylesheet" href="{% static "public/css/main.css" %}">
+</head>
+<body>
+    
+<!-- header section starts  -->
+{% if messages %}
+<ul class="list" id="alert">
+    {% for message in messages %}
+    <li class="alert alert-{{message.tags}}">{{message}}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<header class="header">
+
+    <div class="header-1">
+
+        <a class="logo"> <i class="fas fa-book"></i> کتابخانه </a>
+
+        <form action="{% url "book_search" %}" class="search-form" method="get">
+            <input value="{{word}}" type="text" name="word" placeholder="جستجو کنید" id="search-box">
+            <button type="submit" class="none"><label for="search-box" class="fas fa-search"></label></button>
+        </form>
+
+        <div class="icons">
+            <a href="{% url "dashboard_favorite" %}" class="fas fa-heart"></a>
+            <a href="{% url "book_cart" %}"
+            {% if cart_state %}
+            class="fas fa-shopping-cart favorite-cart"
+            {% else %}
+            class="fas fa-shopping-cart"
+            {% endif %} 
+            ></a>
+            <a href="{% url "dashboard_home" %}" class="fas fa-user"></a>
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                <a href="{% url "admin:index" %}" class="fas fa-user-secret"></a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="header-2">
+        <nav class="navbar">
+            <a href="{% url "book_home" %}">خانه</a>
+            <a href="{% url "book_search" %}">کتاب ها</a>
+            <a href="{% url "weblog_home" %}">وبلاگ</a>
+        </nav>
+    </div>
+
+</header>
+
+<!-- header section ends -->
+
+<!-- bottom navbar  -->
+
+<nav class="bottom-navbar">
+    <a href="{% url "book_home" %}" class="fas fa-home"></a>
+    <a href="{% url "book_search" %}" class="fas fa-tags"></a>
+    <a href="{% url "weblog_home" %}" class="fas fa-blog"></a>
+</nav>
+<!-- home section starts  -->
+
+<section class="home" id="home">
+
+    <div class="row">
+
+        <div class="content">
+            <h3>تا 75٪ تخفیف</h3>
+            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است </p>
+            <a href="{% url "book_search" %}" class="btn">اکنون خرید کنید</a>
+        </div>
+
+        <div class="swiper books-slider">
+            <div class="swiper-wrapper">
+                {% for book in header_books %}
+                <a href="{% url "book_detail" book.id %}" class="swiper-slide"><img src="{{book.cover.url}}" alt="{{book.title}}"></a>
+                {% endfor %}
+            </div>
+            <img src="{% static "public/image/stand.png" %}" class="stand" alt="">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- home section ense  -->
+
+<!-- icons section starts  -->
+
+<section class="icons-container">
+
+    <div class="icons">
+        <i class="fas fa-shipping-fast"></i>
+        <div class="content">
+            <h3>ارسال رایگان</h3>
+            <p>سفارش بالای 100 هزار تومان</p>
+        </div>
+    </div>
+
+    <div class="icons">
+        <i class="fas fa-lock"></i>
+        <div class="content">
+            <h3>پرداخت امن</h3>
+            <p>100 پرداخت مطمئن</p>
+        </div>
+    </div>
+
+    <div class="icons">
+        <i class="fas fa-redo-alt"></i>
+        <div class="content">
+            <h3>بازگشت آسان</h3>
+            <p>10 روز مهلت بازگشت</p>
+        </div>
+    </div>
+
+    <div class="icons">
+        <i class="fas fa-headset"></i>
+        <div class="content">
+            <h3>پشتیبانی 7/24</h3>
+            <p>در هر زمان با ما تماس بگیرید</p>
+        </div>
+    </div>
+
+</section>
+
+<!-- icons section ends -->
+
+{% block content %}{% endblock content %}
+
+<!-- footer section starts  -->
+
+<section class="footer">
+
+    <div class="box-container">
+
+        <div class="box">
+            <h3>دیگر شعبه ها</h3>
+            <a> <i class="fas fa-map-marker-alt"></i> تهران </a>
+            <a> <i class="fas fa-map-marker-alt"></i> مشهد </a>
+            <a> <i class="fas fa-map-marker-alt"></i> اصفهان </a>
+            <a> <i class="fas fa-map-marker-alt"></i> شیراز </a>
+            <a> <i class="fas fa-map-marker-alt"></i> تبریز </a>
+            <a> <i class="fas fa-map-marker-alt"></i> یزد </a>
+        </div>
+
+        <div class="box">
+            <h3>quick links</h3>
+            <a href="{% url "book_home" %}"> <i class="fas fa-arrow-right"></i> خانه </a>
+            <a href="{% url "book_search" %}"> <i class="fas fa-arrow-right"></i> کتاب ها </a>
+            <a href="{% url "weblog_home" %}"> <i class="fas fa-arrow-right"></i> وبلاگ </a>
+        </div>
+
+        <div class="box">
+            <h3>extra links</h3>
+            <a href="{% url "dashboard_home" %}"> <i class="fas fa-arrow-right"></i> حساب کاربری </a>
+        </div>
+
+        <div class="box">
+            <h3>contact info</h3>
+            <a href="#"> <i class="fas fa-phone"></i> +123-456-7890 </a>
+            <a href="#"> <i class="fas fa-phone"></i> +111-222-3333 </a>
+            <a href="#"> <i class="fas fa-envelope"></i> admin@netcopy.ir </a>
+            <img src="{% static "public/image/worldmap.png" %}" class="map" alt="">
+        </div>
+        
+    </div>
+
+    <div class="share">
+        <a href="#" class="fab fa-facebook-f"></a>
+        <a href="#" class="fab fa-twitter"></a>
+        <a href="#" class="fab fa-instagram"></a>
+        <a href="#" class="fab fa-linkedin"></a>
+        <a href="#" class="fab fa-pinterest"></a>
+    </div>
+
+    <div class="credit"> فارسی و راست چین شده توسط <a href="https://netcopy.ir"><span>نت کپی</span></a> </div>
+
+</section>
+
+<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+<script src="{% static "public/js/script.js" %}"></script>
+</body>
+</html>

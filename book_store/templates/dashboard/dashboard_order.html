@@ -1,0 +1,67 @@
+{% extends "dashboard_layout.html" %} 
+{% load jformat %}
+{% load module_tags %}
+{% block title %}لیست فاکتور های من{% endblock title %} 
+{% block content %}
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body text-right">
+      <h4 class="card-title text-right">جدول فاکتور ها</h4>
+      <div class="table-responsive" style="direction:rtl;">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>شناسه</th>
+              <th>آدرس</th>
+              <th>مبلغ</th>
+              <th>تاریخ ساخت</th>
+              <th>وضعیت</th>
+              <th>ابزار ها</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr>
+              <td>{{order.id}}</td>
+              <td>{{order.address}}</td>
+              <td>{{order.pay_price}} تومان </td>
+              <td>{{order.datetime_modified|jformat:"%d %m %Y"}}</td>
+              <td>
+                {% if order.is_paid  %}
+                <span class="badge badge-success">پرداخت شده</span>
+                {% else %}
+                <span class="badge badge-danger">پرداخت نشده</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if order.is_paid  %}
+                <a class="btn btn-info" href="{% url "dashboard_order_item" order.id %}">جزئیات</a>
+                {% else %}
+                <a class="btn btn-info" href="{% url "dashboard_order_item" order.id %}">جزئیات</a>
+                <a class="btn btn-warning" href="{% url "try_to_pay" order.pay_price order.id %}">پرداخت</a>
+                {% endif %}
+            </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+    <div>
+        <ul class="d-flex flex-row-reverse list-unstyled justify-content-center pt-4">
+            {% if orders.has_previous %}
+                <li><a class="btn btn-success" href="{% url 'dashboard_order' %}?page={{orders.previous_page_number}}">صفحه قبل</a></li>
+            {% else %}
+                <li><a class="btn btn-secondary">صفحه قبل</a></li>
+            {% endif %}
+            <li class="btn border mx-2">{{ orders.number }}</li>
+            {% if orders.has_next %}
+            <li><a class="btn btn-success" href="{% url 'dashboard_order' %}?page={{orders.next_page_number}}">صفحه بعد</a></li>
+            {% else %}
+            <li><a class="btn btn-secondary">صفحه بعد</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

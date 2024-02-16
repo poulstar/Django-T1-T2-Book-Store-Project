@@ -1,0 +1,60 @@
+{% extends "public_layout.html" %}
+{% load static %}
+{% load module_tags %}
+{% block title %}دنبال چه کتابی می گردید{% endblock title %}
+
+{% block content %}
+<!-- arrivals section starts  -->
+
+<section class="arrivals" id="arrivals">
+
+    <h1 class="heading"> <span>کتابهای جدید</span> </h1>
+
+    <div class="arrivals-slider">
+
+        <div class="row-hor">
+            {% for book in books %}
+            <a href="{% url "book_detail" book.id %}" class="box">
+                <div class="image">
+                    <img src="{{book.cover.url}}" alt="{{book.title}}">
+                </div>
+                <div class="content">
+                    <h3>{{book.title}}</h3>
+                    {% if book.discount %}
+                    <div class="price">{{book.price|mines_two_number:book.discount.price}} تومان <span>{{book.price}} تومان</span></div>
+                    {% else %}
+                    <div class="price">{{book.price}} تومان </div>
+                    {% endif %}
+                    <div class="stars">
+                        {% for number in book.star|create_list %}
+                        <i class="fas fa-star"></i>
+                        {% endfor %}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+
+
+        </div>
+        <div>
+            <ul class="pagination">
+                {% if books.has_previous %}
+                    <li><a class="btn" href="{% url 'book_search'%}?page={{books.previous_page_number}}">صفحه قبل</a></li>
+                {% else %}
+                    <li><a class="disabled btn">صفحه قبل</a></li>
+                {% endif %}
+                <li class="center-item"><a>{{ books.number }}</a></li>
+                {% if books.has_next %}
+                <li><a class="btn" href="{% url 'book_search'%}?page={{books.next_page_number}}">صفحه بعد</a></li>
+                {% else %}
+                <li><a class="disabled btn">صفحه بعد</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- arrivals section ends -->
+{% endblock content %}

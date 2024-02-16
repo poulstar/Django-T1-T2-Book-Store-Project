@@ -1,0 +1,49 @@
+{% extends "public_layout.html" %}
+{% load static %}
+{% block title %}بلاگ{% endblock title %}
+
+{% block content %}
+<!-- blogs section starts  -->
+
+<section class="arrivals">
+
+    <h1 class="heading"> <span>وبلاگ</span> </h1>
+
+    <div class="arrivals-slider">
+
+        <a class="row-hor">
+            {% for weblog in weblogs %}
+            <div class="box">
+                <div class="image">
+                    <img src="{{weblog.image.url}}" alt="{{weblog.title}}">
+                </div>
+                <div class="content">
+                    <h3>{{weblog.title}}</h3>
+                    <p>{{weblog.text|truncatewords:100}} </p>
+                    <a href="{% url "weblog_detail" weblog.id %}" class="btn">مطالعه بیشتر</a>
+                </div>
+            </div>
+            {% endfor %}
+        </a>
+
+    </div>
+    <div>
+        <ul class="pagination">
+            {% if weblogs.has_previous %}
+                <li><a class="btn" href="{% url 'weblog_home'%}?page={{weblogs.previous_page_number}}">صفحه قبل</a></li>
+            {% else %}
+                <li><a class="disabled btn">صفحه قبل</a></li>
+            {% endif %}
+            <li class="center-item"><a>{{ weblogs.number }}</a></li>
+            {% if weblogs.has_next %}
+            <li><a class="btn" href="{% url 'weblog_home'%}?page={{weblogs.next_page_number}}">صفحه بعد</a></li>
+            {% else %}
+            <li><a class="disabled btn">صفحه بعد</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+</section>
+
+<!-- blogs section ends -->
+{% endblock content %}

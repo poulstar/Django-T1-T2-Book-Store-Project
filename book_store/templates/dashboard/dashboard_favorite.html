@@ -1,0 +1,79 @@
+{% extends "dashboard_layout.html" %} 
+{% load jformat %}
+{% load module_tags %}
+{% block title %}لیست علاقه مندی های من{% endblock title %} 
+{% block content %}
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body text-right">
+      <h4 class="card-title text-right">جدول علاقه مندی ها</h4>
+      <div class="table-responsive" style="direction:rtl;">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>شناسه</th>
+              <th>تصویر</th>
+              <th>عنوان</th>
+              <th>نویسنده</th>
+              <th>مترجم</th>
+              <th>ناشر</th>
+              <th>ژانر</th>
+              <th>امتیاز</th>
+              <th>تاریخ ساخت</th>
+              <th>ابزار ها</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for book in books %}
+            <tr>
+              <td>{{book.id}}</td>
+              <td>
+                <img
+                  src="{{book.cover.url}}"
+                  alt="{{book.title}}"
+                />
+              </td>
+              <td>{{book.title|truncatewords:3}}</td>
+              <td>{{book.author}}</td>
+              <td>{{book.translator}}</td>
+              <td>{{book.publisher}}</td>
+              <td>
+                {% for genre in book.genre.all %}
+                <ul class="m-2">
+                  <li>{{genre.label}}</li>
+                </ul>
+                {% endfor %}
+              </td>
+              <td>
+                {% for item in book.star|create_list %}
+                <span class="mdi mdi-star text-warning"></span>
+                {% endfor %}
+              </td>
+              <td>{{book.datetime_modified|jformat:"%d %m %Y"}}</td>
+              <td>
+                <a class="btn btn-danger" href="{% url "change_favorite_state" book.id %}">حذف</a>
+            </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+    <div>
+        <ul class="d-flex flex-row-reverse list-unstyled justify-content-center pt-4">
+            {% if books.has_previous %}
+                <li><a class="btn btn-success" href="{% url 'dashboard_favorite' %}?page={{books.previous_page_number}}">صفحه قبل</a></li>
+            {% else %}
+                <li><a class="btn btn-secondary">صفحه قبل</a></li>
+            {% endif %}
+            <li class="btn border mx-2">{{ books.number }}</li>
+            {% if books.has_next %}
+            <li><a class="btn btn-success" href="{% url 'dashboard_favorite' %}?page={{books.next_page_number}}">صفحه بعد</a></li>
+            {% else %}
+            <li><a class="btn btn-secondary">صفحه بعد</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

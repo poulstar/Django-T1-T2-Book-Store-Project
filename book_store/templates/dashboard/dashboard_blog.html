@@ -1,0 +1,61 @@
+{% extends "dashboard_layout.html" %} 
+{% load jformat %}
+{% block title %}لیست مقالات من{% endblock title %} 
+{% block content %}
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body text-right">
+      <h4 class="card-title text-right">جدول مقالات</h4>
+      <div class="table-responsive" style="direction:rtl;">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>شناسه</th>
+              <th>تصویر</th>
+              <th>عنوان</th>
+              <th>خلاصه متن</th>
+              <th>تاریخ ساخت</th>
+              <th>ابزار ها</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for weblog in weblogs %}
+            <tr>
+              <td>{{weblog.id}}</td>
+              <td class="py-1">
+                <img
+                  src="{{weblog.image.url}}"
+                  alt="{{weblog.title}}"
+                />
+              </td>
+              <td>{{weblog.title}}</td>
+              <td>{{weblog.text|truncatewords:5}}</td>
+              <td>{{weblog.datetime_modified|jformat:"%d %m %Y"}}</td>
+              <td>
+                <a class="btn btn-warning" href="{% url "dashboard_blog_update" weblog.id %}">ویرایش</a>
+                <a class="btn btn-danger" href="{% url "dashboard_blog_delete" weblog.id %}">حذف</a>
+            </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+    <div>
+        <ul class="d-flex flex-row-reverse list-unstyled justify-content-center pt-4">
+            {% if weblogs.has_previous %}
+                <li><a class="btn btn-success" href="{% url 'dashboard_blog' %}?page={{weblogs.previous_page_number}}">صفحه قبل</a></li>
+            {% else %}
+                <li><a class="btn btn-secondary">صفحه قبل</a></li>
+            {% endif %}
+            <li class="btn border mx-2">{{ weblogs.number }}</li>
+            {% if weblogs.has_next %}
+            <li><a class="btn btn-success" href="{% url 'dashboard_blog' %}?page={{weblogs.next_page_number}}">صفحه بعد</a></li>
+            {% else %}
+            <li><a class="btn btn-secondary">صفحه بعد</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

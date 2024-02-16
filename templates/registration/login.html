@@ -1,0 +1,34 @@
+{% extends "form_layout.html" %}
+
+{% block top_title %}
+ورود
+{% endblock top_title %}
+
+{% block form_title %}
+ورود به سایت
+{% endblock form_title %}
+
+{% block form_content %}
+<form action="{% url "login" %}" method="post">
+    {% csrf_token %}
+  <div class="form-group text-right">
+    <label>نام کاربری</label>
+    <input name="username" type="text" class="form-control p_input">
+    <label class="text-danger" style="direction:rtl;">{{form.errors.username}}</label>
+  </div>
+  <div class="form-group text-right">
+    <label>رمز عبور</label>
+    <input name="password" type="password" class="form-control p_input">
+    <label class="text-danger" style="direction:rtl;">{{form.errors.password}}</label>
+  </div>
+  <div class="form-group d-flex align-items-center justify-content-between">
+    <a href="{% url "password_reset" %}" class="forgot-pass">فراموشی رمز عبور</a>
+    <a href="{% url "book_home" %}" class="forgot-pass">بازگشت به صفحه اصلی</a>
+  </div>
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary btn-block enter-btn">ورود</button>
+  </div>
+  
+  <p class="sign-up">آیا حساب کاربری ندارید؟<a href="{% url "register" %}"> ثبت نام</a> کنید </p>
+</form>
+{% endblock form_content %}

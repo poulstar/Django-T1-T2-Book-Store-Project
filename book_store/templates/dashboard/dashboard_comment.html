@@ -1,0 +1,68 @@
+{% extends "dashboard_layout.html" %} 
+{% load jformat %}
+{% load module_tags %}
+{% block title %}لیست نظر های من{% endblock title %} 
+{% block content %}
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body text-right">
+      <h4 class="card-title text-right">جدول نظر ها</h4>
+      <div class="table-responsive" style="direction:rtl;">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>شناسه</th>
+              <th>نام کتاب</th>
+              <th>خلاصه نظر</th>
+              <th>تاریخ ساخت</th>
+              <th>تعداد ستاره</th>
+              <th>وضعیت</th>
+              <th>ابزار ها</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for comment in comments %}
+            <tr>
+              <td>{{comment.id}}</td>
+              <td>{{comment.book.title}}</td>
+              <td>{{comment.text|truncatewords:5}}</td>
+              <td>{{comment.datetime_modified|jformat:"%d %m %Y"}}</td>
+              <td>
+                {% for item in comment.star|create_list %}
+                <span class="mdi mdi-star text-warning"></span>
+                {% endfor %}
+              </td>
+              <td>
+                {% if comment.is_active  %}
+                <span class="badge badge-success">فعال</span>
+                {% else %}
+                <span class="badge badge-danger">غیر فعال</span>
+                {% endif %}
+              </td>
+              <td>
+                <a class="btn btn-danger" href="{% url "dashboard_comment_delete" comment.id %}">حذف</a>
+            </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+    <div>
+        <ul class="d-flex flex-row-reverse list-unstyled justify-content-center pt-4">
+            {% if comments.has_previous %}
+                <li><a class="btn btn-success" href="{% url 'dashboard_comment' %}?page={{comments.previous_page_number}}">صفحه قبل</a></li>
+            {% else %}
+                <li><a class="btn btn-secondary">صفحه قبل</a></li>
+            {% endif %}
+            <li class="btn border mx-2">{{ comments.number }}</li>
+            {% if comments.has_next %}
+            <li><a class="btn btn-success" href="{% url 'dashboard_comment' %}?page={{comments.next_page_number}}">صفحه بعد</a></li>
+            {% else %}
+            <li><a class="btn btn-secondary">صفحه بعد</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
